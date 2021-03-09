@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/kataras/iris/v12"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -14,6 +15,10 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
+
+	pflag.String("app.cacheDir", "./cache/", "cache directory")
+	pflag.Parse()
+	viper.BindPFlags(pflag.CommandLine)
 
 	fmt.Println(viper.GetString("app.cacheDir"))
 
