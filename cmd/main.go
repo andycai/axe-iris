@@ -24,7 +24,10 @@ func main() {
 
 	app := iris.Default()
 
-	//usersAPI := app.Party("/users")
+	usersAPI := app.Party("/users")
+	{
+		usersAPI.Get("/:uid", )
+	}
 	//groupsAPI := app.Party("/groups")
 	//actsAPI := app.Party("/activities")
 
