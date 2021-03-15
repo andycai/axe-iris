@@ -93,7 +93,7 @@ func (g *Group) Promote(uid int64) bool {
 func (g *Group) Transfer(uid, mid int64) bool {
 	b := false
 	if !g.IsMember(uid) || !g.IsMember(mid) {
-		return b
+		return false
 	}
 	for _, member := range g.Members {
 		// 外部自行判断权限
