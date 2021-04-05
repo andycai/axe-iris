@@ -1,6 +1,9 @@
 package main
 
 import (
+	"axe/dao/mysql"
+	"axe/gl"
+	"axe/v1/system"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/spf13/pflag"
@@ -20,18 +23,55 @@ func main() {
 	pflag.Parse()
 	viper.BindPFlags(pflag.CommandLine)
 
-	fmt.Println(viper.GetString("app.cacheDir"))
+	//fmt.Println(viper.GetString("app.cacheDir"))
 
-	app := iris.Default()
+	mysql.InitMySQL()
 
-	usersAPI := app.Party("/users")
+	gl.App = iris.Default()
+	gl.App.Post("/login", system.User.Login)
+	gl.App.Post("/login_wx", system.User.Login)
+	gl.App.Post("/login_wx", system.User.Logout)
+
+	usersAPI := gl.App.Party("/users")
 	{
-		usersAPI.Get("/:uid", )
+		usersAPI.Get("/{uid:int64}", system.User.GetUser)
+		usersAPI.Get("/your/groups", system.Group.GetGroupsByUserId)
+		usersAPI.Get("/your/activities", system.Activity.GetActivitiesByUserId)
 	}
-	//groupsAPI := app.Party("/groups")
-	//actsAPI := app.Party("/activities")
 
-	booksAPI := app.Party("/books")
+	groupsAPI := gl.App.Party("/groups")
+	{
+		groupsAPI.Get("/{gid:int}", system.Group.GetGroupById)
+		groupsAPI.Get("/", system.Group.GetGroups)
+		groupsAPI.Get("/{gid:int}/pending", system.Group.GetApplyList)
+		groupsAPI.Get("/{gid:int}/activities", system.Group.GetActivitiesByGroupId)
+
+		groupsAPI.Post("/", system.Group.Create)
+		groupsAPI.Post("/{gid:int}/gl.Apply", system.Group.Apply)
+		groupsAPI.Post("/{gid:int}/gl.Approve", system.Group.Approve)
+		groupsAPI.Post("/{gid:int}/promote/:mid", system.Group.Promote)
+		groupsAPI.Post("/{gid:int}/transfer/:mid", system.Group.Transfer)
+		groupsAPI.Post("/{gid:int}/remove/:mid", system.Group.Remove)
+		groupsAPI.Post("/{gid:int}/quit", system.Group.Quit)
+
+		groupsAPI.Put("/{gid:int}", system.Group.Update)
+	}
+
+	actsAPI := gl.App.Party("/activities")
+	{
+		actsAPI.Get("/{aid:int64}", system.Activity.GetActivityById)
+		actsAPI.Get("/", system.Activity.GetActivities)
+
+		actsAPI.Post("/", system.Activity.Create)
+		actsAPI.Post("/{aid:int64}/end", system.Activity.End)
+		actsAPI.Post("/{aid:int64}/gl.Apply", system.Activity.Apply)
+		actsAPI.Post("/{aid:int64}/cancel", system.Activity.Cancel)
+		actsAPI.Post("/{aid:int64}/remove/:index", system.Activity.Remove)
+
+		actsAPI.Put("/{aid:int64}", system.Activity.Update)
+	}
+
+	booksAPI := gl.App.Party("/books")
 	{
 		booksAPI.Use(iris.Compression)
 
@@ -41,7 +81,7 @@ func main() {
 		booksAPI.Post("/", create)
 	}
 
-	app.Listen(":8080")
+	gl.App.Listen(viper.GetString("httpServer.addr"))
 }
 
 // Book example.

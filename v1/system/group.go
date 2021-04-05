@@ -2,59 +2,59 @@ package system
 
 import "github.com/kataras/iris/v12"
 
-type GroupSystem struct {}
+type GroupSystem struct{}
 
-var group = new(GroupSystem)
+var Group = new(GroupSystem)
 
-func (g GroupSystem) getGroupById(ctx iris.Context) {
+func (g GroupSystem) GetGroupById(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) getGroupsByUserId(ctx iris.Context) {
+func (g GroupSystem) GetGroupsByUserId(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) getGroups(ctx iris.Context) {
+func (g GroupSystem) GetGroups(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) getApplyList(ctx iris.Context) {
+func (g GroupSystem) GetApplyList(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) getActivitiesByGroupId(ctx iris.Context) {
+func (g GroupSystem) GetActivitiesByGroupId(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) create(ctx iris.Context) {
+func (g GroupSystem) Create(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) apply(ctx iris.Context) {
+func (g GroupSystem) Apply(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) approve(ctx iris.Context) {
+func (g GroupSystem) Approve(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) promote(ctx iris.Context) {
+func (g GroupSystem) Promote(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) transfer(ctx iris.Context) {
+func (g GroupSystem) Transfer(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) remove(ctx iris.Context) {
+func (g GroupSystem) Remove(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (g GroupSystem) quit(ctx iris.Context) {
+func (g GroupSystem) Quit(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
 // put
-func (g GroupSystem) update(ctx iris.Context) {
+func (g GroupSystem) Update(ctx iris.Context) {
 	ctx.JSON(nil)
 }

@@ -1,8 +1,8 @@
 package comp
 
 type Session struct {
-	At    int64
-	Uid   int64
-	Sex   int
-	Token string
+	At    int64  `json:"at"`
+	Uid   int64  `json:"uid"`
+	Sex   int    `json:"sex"`
+	Token string `json:"token"`
 }

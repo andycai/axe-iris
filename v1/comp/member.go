@@ -1,11 +1,11 @@
 package comp
 
 type Member struct {
-	Id     int64
-	Scores int
-	Pos    int
-	Sex    int
-	At     int64
-	WxNick string
-	Nick   string
+	Id     int64  `json:"id"`
+	Scores int    `json:"scores"`
+	Pos    int    `json:"pos"`
+	Sex    int    `json:"sex"`
+	At     int64  `json:"at"`
+	WxNick string `json:"wx_nick"`
+	Nick   string `json:"nick"`
 }

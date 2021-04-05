@@ -14,7 +14,7 @@ type Activity struct {
 	Type      int     `json:"type"`       // 活动类型:1全局保护,2全局公开,3群组
 	Status    int     `json:"status"`     // 活动状态:1进行中,2正常结算完成,3手动终止
 	Quota     int     `json:"quota"`      // 名额
-	Group_id  int     `json:"group_id"`   // 群组ID
+	GroupId   int     `json:"group_id"`   // 群组ID
 	Ahead     int     `json:"ahead"`      // 提前取消报名限制（小时）
 	FeeType   int     `json:"fee_type"`   // 结算方式:1免费,2活动前,3活动后男女平均,4活动后男固定|女平摊,5活动后男平摊|女固定
 	FeeMale   int     `json:"fee_male"`   // 男费用
@@ -34,7 +34,7 @@ func (a Activity) Init() {
 }
 
 func (a Activity) InGroup() bool {
-	return a.Group_id > 0
+	return a.GroupId > 0
 }
 
 func (a Activity) IsPlanner(uid int64) bool {

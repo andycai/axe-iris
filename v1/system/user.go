@@ -1,39 +1,44 @@
 package system
 
-import "github.com/kataras/iris/v12"
+import (
+	"axe/cache"
+	"github.com/kataras/iris/v12"
+)
 
-type UserSystem struct {}
+type UserSystem struct{}
 
 var User = new(UserSystem)
 
-func (u UserSystem) getUser(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) GetUser(c iris.Context) {
+	uid, _ := c.Params().GetInt64("uid")
+	user := cache.User.GetUserById(uid)
+	OK(c, user)
 }
 
-func (u UserSystem) login(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) Login(c iris.Context) {
+	c.JSON(nil)
 }
 
-func (u UserSystem) logout(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) Logout(c iris.Context) {
+	c.JSON(nil)
 }
 
-func (u UserSystem) enterGroup(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) EnterGroup(c iris.Context) {
+	c.JSON(nil)
 }
 
-func (u UserSystem) quitGroup(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) QuitGroup(c iris.Context) {
+	c.JSON(nil)
 }
 
-func (u UserSystem) applyActivity(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) ApplyActivity(c iris.Context) {
+	c.JSON(nil)
 }
 
-func (u UserSystem) cancel(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) Cancel(c iris.Context) {
+	c.JSON(nil)
 }
 
-func (u UserSystem) saveData(ctx iris.Context) {
-	ctx.JSON(nil)
+func (u UserSystem) SaveData(c iris.Context) {
+	c.JSON(nil)
 }

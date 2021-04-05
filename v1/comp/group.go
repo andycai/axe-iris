@@ -3,16 +3,16 @@ package comp
 import "axe/define"
 
 type Group struct {
-	Id         int64
-	Level      int
-	Scores     int
-	Name       string
-	Logo       string
-	Notice     string
-	Addr       string
-	Activities []int64
-	Pending    []int64 // 申请入群列表
-	Members    []Member
+	Id         int64    `json:"id"`
+	Level      int      `json:"level"`
+	Scores     int      `json:"scores"`
+	Name       string   `json:"name"`
+	Logo       string   `json:"logo"`
+	Notice     string   `json:"notice"`
+	Addr       string   `json:"addr"`
+	Activities []int64  `json:"activities"`
+	Pending    []int64  `json:"pending"` // 申请入群列表
+	Members    []Member `json:"members"`
 }
 
 func (g Group) Init() {

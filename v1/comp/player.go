@@ -1,8 +1,8 @@
 package comp
 
 type Player struct {
-	Id     int64
-	Sex    int
-	WxNick string
-	Nick   string
+	Id     int64  `json:"id"`
+	Sex    int    `json:"sex"`
+	WxNick string `json:"wx_nick"`
+	Nick   string `json:"nick"`
 }

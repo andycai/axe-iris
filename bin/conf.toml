@@ -3,16 +3,16 @@ version = 1 # 0=debug 1=release
 cacheDir = "./cache/"
 
 [httpServer]
-addr = ":8080"
+addr = ":8888"
 
 [log]
 dir = "./log/"
 
 [db]
 # 玩家、公告、反馈 的db地址
-dsn = "devel:uL8d0oLSjz@tcp(127.0.0.1:3306)/zb3d_manager_cn?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
-active = 5
-idle = 2
+dsn = "devel:i18n@tcp(127.0.0.1:3306)/plan_activity?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
+active = 200
+idle = 10
 idleTimeout = 345600
 debug = true
 

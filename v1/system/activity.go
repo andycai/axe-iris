@@ -2,42 +2,42 @@ package system
 
 import "github.com/kataras/iris/v12"
 
-type ActivitySystem struct {}
+type ActivitySystem struct{}
 
-var ACtivity = new(ActivitySystem)
+var Activity = new(ActivitySystem)
 
-func (a ActivitySystem) getActivityById(ctx iris.Context) {
+func (a ActivitySystem) GetActivityById(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) getActivitiesByUserId(ctx iris.Context) {
+func (a ActivitySystem) GetActivitiesByUserId(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) getActivities(ctx iris.Context) {
+func (a ActivitySystem) GetActivities(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) create(ctx iris.Context) {
+func (a ActivitySystem) Create(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) end(ctx iris.Context) {
+func (a ActivitySystem) End(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) apply(ctx iris.Context) {
+func (a ActivitySystem) Apply(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) cancel(ctx iris.Context) {
+func (a ActivitySystem) Cancel(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) remove(ctx iris.Context) {
+func (a ActivitySystem) Remove(ctx iris.Context) {
 	ctx.JSON(nil)
 }
 
-func (a ActivitySystem) update(ctx iris.Context) {
+func (a ActivitySystem) Update(ctx iris.Context) {
 	ctx.JSON(nil)
 }
