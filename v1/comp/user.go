@@ -2,6 +2,7 @@ package comp
 
 import (
 	"axe/util/slice"
+	"time"
 )
 
 type User struct {
@@ -26,16 +27,17 @@ type User struct {
 
 func NewUser() *User {
 	u := new(User)
-	u.GroupsV = make([]int, 0)
-	u.ActivitiesV = make([]int64, 0)
 	return u
 }
 
-func (u *User) Init() {
+// OutDB 出库后的数据格式
+func (u *User) OutDB() {
 	json.Unmarshal([]byte(u.Groups), &u.GroupsV)
 	json.Unmarshal([]byte(u.Activities), &u.ActivitiesV)
-	//u.GroupsV = make([]int, 0)
-	//u.ActivitiesV = make([]int64, 0)
+	t, err := time.Parse(TimeFormatE, u.CreateAt)
+	if err == nil {
+		u.CreateAt = t.Format(TimeFormat)
+	}
 }
 
 func (u User) HasActivity(aid int64) bool {

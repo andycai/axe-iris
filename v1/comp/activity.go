@@ -35,11 +35,9 @@ func NewActivity() *Activity {
 	return a
 }
 
-func (a Activity) Init() {
+func (a Activity) OutDB() {
 	json.Unmarshal([]byte(a.Queue), &a.QueueV)
 	json.Unmarshal([]byte(a.QueueSex), &a.QueueSexV)
-	//a.QueueV = make([]int64, 0)
-	//a.QueueSexV = make([]int, 0)
 }
 
 func (a Activity) InGroup() bool {

@@ -25,13 +25,10 @@ func NewGroup() *Group {
 	return g
 }
 
-func (g Group) Init() {
+func (g Group) OutDB() {
 	json.Unmarshal([]byte(g.Activities), &g.ActivitiesV)
 	json.Unmarshal([]byte(g.Pending), &g.PendingV)
 	json.Unmarshal([]byte(g.Members), &g.MembersV)
-	//g.ActivitiesV = make([]int64, 0)
-	//g.PendingV = make([]int64, 0)
-	//g.MembersV = make([]Member, 0)
 }
 
 func (g Group) NotInPendingV(index int) bool {
