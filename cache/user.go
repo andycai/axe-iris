@@ -24,7 +24,8 @@ func (uc *UserCache) GetUserById(id int64) *comp.User {
 		return user
 	}
 	gl.App.Logger().Infof("获得用户数据（DB）：%d", id)
-	user := comp.NewUser(mysql.User.GetUserById(id))
+	user := mysql.User.GetUserById(id)
+	user.Init()
 	uc.usersForId[id] = user
 
 	return user

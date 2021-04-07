@@ -10,27 +10,36 @@ import (
 type Activity struct {
 	Id        int64   `json:"id"`
 	Planner   int64   `json:"planner"`
-	Kind      int     `json:"kind"`       // 活动分类:1羽毛球,2篮球,3足球,4聚餐...
-	Type      int     `json:"type"`       // 活动类型:1全局保护,2全局公开,3群组
-	Status    int     `json:"status"`     // 活动状态:1进行中,2正常结算完成,3手动终止
-	Quota     int     `json:"quota"`      // 名额
-	GroupId   int     `json:"group_id"`   // 群组ID
-	Ahead     int     `json:"ahead"`      // 提前取消报名限制（小时）
-	FeeType   int     `json:"fee_type"`   // 结算方式:1免费,2活动前,3活动后男女平均,4活动后男固定|女平摊,5活动后男平摊|女固定
-	FeeMale   int     `json:"fee_male"`   // 男费用
-	FeeFemale int     `json:"fee_female"` // 女费用
+	Kind      int     `json:"kind"`                       // 活动分类:1羽毛球,2篮球,3足球,4聚餐...
+	Type      int     `json:"type"`                       // 活动类型:1全局保护,2全局公开,3群组
+	Status    int     `json:"status"`                     // 活动状态:1进行中,2正常结算完成,3手动终止
+	Quota     int     `json:"quota"`                      // 名额
+	GroupId   int     `json:"group_id" db:"group_id"`     // 群组ID
+	Ahead     int     `json:"ahead"`                      // 提前取消报名限制（小时）
+	FeeType   int     `json:"fee_type" db:"fee_type"`     // 结算方式:1免费,2活动前,3活动后男女平均,4活动后男固定|女平摊,5活动后男平摊|女固定
+	FeeMale   int     `json:"fee_male" db:"fee_male"`     // 男费用
+	FeeFemale int     `json:"fee_female" db:"fee_female"` // 女费用
 	Title     string  `json:"title"`
 	Remark    string  `json:"remark"`
 	Addr      string  `json:"addr"`
-	BeginAt   string  `json:"begin_at"`
-	EndAt     string  `json:"end_at"`
-	Queue     []int64 `json:"queue"`     // 报名队列
-	QueueSex  []int   `json:"queue_sex"` // 报名队列中的性别
+	BeginAt   string  `json:"begin_at" db:"begin_at"`
+	EndAt     string  `json:"end_at" db:"end_at"`
+	Queue     string  `json:"-"`
+	QueueSex  string  `json:"-" db:"queue_sex"`
+	QueueV    []int64 `json:"queue" db:"-"`     // 报名队列
+	QueueSexV []int   `json:"queue_sex" db:"-"` // 报名队列中的性别
+}
+
+func NewActivity() *Activity {
+	a := new(Activity)
+	return a
 }
 
 func (a Activity) Init() {
-	a.Queue = make([]int64, 0)
-	a.QueueSex = make([]int, 0)
+	json.Unmarshal([]byte(a.Queue), &a.QueueV)
+	json.Unmarshal([]byte(a.QueueSex), &a.QueueSexV)
+	//a.QueueV = make([]int64, 0)
+	//a.QueueSexV = make([]int, 0)
 }
 
 func (a Activity) InGroup() bool {
@@ -56,13 +65,13 @@ func (a Activity) Settle(fee int) {
 
 // 报名的人数超过候补的限制，避免乱报名，如带100000人报名
 func (a Activity) OverQuota(total int) bool {
-	return len(a.Queue)+total-a.Quota > define.ActivityOverFlow
+	return len(a.QueueV)+total-a.Quota > define.ActivityOverFlow
 }
 
 // 要取消报名的数量超过已经报名的数量
 func (a Activity) NotEnough(uid int64, total int) bool {
 	c := 0
-	for _, v := range a.Queue {
+	for _, v := range a.QueueV {
 		if v == uid {
 			c += 1
 		}
@@ -70,8 +79,8 @@ func (a Activity) NotEnough(uid int64, total int) bool {
 	return total > c
 }
 
-func (a Activity) InQueue(uid int64) bool {
-	for _, v := range a.Queue {
+func (a Activity) InQueueV(uid int64) bool {
+	for _, v := range a.QueueV {
 		if v == uid {
 			return true
 		}
@@ -79,50 +88,50 @@ func (a Activity) InQueue(uid int64) bool {
 	return false
 }
 
-func (a Activity) GetIdFromQueue(index int) int64 {
-	if index < 0 || index >= len(a.Queue) {
+func (a Activity) GetIdFromQueueV(index int) int64 {
+	if index < 0 || index >= len(a.QueueV) {
 		return 0
 	}
-	return a.Queue[index]
+	return a.QueueV[index]
 }
 
 func (a Activity) Enqueue(uid int64, maleCount, femaleCount int) {
-	a.fixQueue()
+	a.fixQueueV()
 	for i := 0; i < maleCount; i++ {
-		a.Queue = append(a.Queue, uid)
-		a.QueueSex = append(a.QueueSex, define.TypeSexMale)
+		a.QueueV = append(a.QueueV, uid)
+		a.QueueSexV = append(a.QueueSexV, define.TypeSexMale)
 	}
 	for i := 0; i < femaleCount; i++ {
-		a.Queue = append(a.Queue, uid)
-		a.QueueSex = append(a.QueueSex, define.TypeSexFemale)
+		a.QueueV = append(a.QueueV, uid)
+		a.QueueSexV = append(a.QueueSexV, define.TypeSexFemale)
 	}
 }
 
 func (a Activity) Dequeue(index int) bool {
-	a.fixQueue()
-	if index < 0 || index >= len(a.Queue) {
+	a.fixQueueV()
+	if index < 0 || index >= len(a.QueueV) {
 		return false
 	}
-	a.Queue = append(a.Queue[:index], a.Queue[index+1:]...)
-	a.QueueSex = append(a.QueueSex[:index], a.QueueSex[index+1:]...)
+	a.QueueV = append(a.QueueV[:index], a.QueueV[index+1:]...)
+	a.QueueSexV = append(a.QueueSexV[:index], a.QueueSexV[index+1:]...)
 	return true
 }
 
 func (a Activity) DequeueMany(uid int64, maleCount, femaleCount int) {
-	a.fixQueue()
+	a.fixQueueV()
 	mCount := 0
 	fCount := 0
-	size := len(a.Queue)
+	size := len(a.QueueV)
 	posArr := make([]int, 1)
 	for i := size - 1; i >= 0; i-- {
-		if a.Queue[i] == uid {
+		if a.QueueV[i] == uid {
 			// 男
-			if a.QueueSex[i] == define.TypeSexMale && maleCount > mCount {
+			if a.QueueSexV[i] == define.TypeSexMale && maleCount > mCount {
 				mCount += 1
 				posArr = append(posArr, i)
 			}
 			// 女
-			if a.QueueSex[i] == define.TypeSexFemale && femaleCount > fCount {
+			if a.QueueSexV[i] == define.TypeSexFemale && femaleCount > fCount {
 				fCount += 1
 				posArr = append(posArr, i)
 			}
@@ -132,8 +141,8 @@ func (a Activity) DequeueMany(uid int64, maleCount, femaleCount int) {
 		}
 	}
 	for _, v := range posArr {
-		a.Queue = append(a.Queue[:v], a.Queue[v+1:]...)
-		a.QueueSex = append(a.QueueSex[:v], a.QueueSex[v+1:]...)
+		a.QueueV = append(a.QueueV[:v], a.QueueV[v+1:]...)
+		a.QueueSexV = append(a.QueueSexV[:v], a.QueueSexV[v+1:]...)
 	}
 }
 
@@ -151,20 +160,20 @@ func (a Activity) CanCancel() bool {
 // 私有方法
 
 // 长度不一致，修正使其一致
-func (a Activity) fixQueue() {
-	df := len(a.QueueSex) - len(a.Queue)
+func (a Activity) fixQueueV() {
+	df := len(a.QueueSexV) - len(a.QueueV)
 	switch {
 	case df > 0:
-		a.QueueSex = a.QueueSex[:len(a.Queue)]
+		a.QueueSexV = a.QueueSexV[:len(a.QueueV)]
 	case df < 0:
-		a.Queue = a.Queue[:len(a.QueueSex)]
+		a.QueueV = a.QueueV[:len(a.QueueSexV)]
 	}
 }
 
 // totalCount 有效的报名人数（不包括候选）
 func (a Activity) totalCount() int {
 	c := 0
-	size := len(a.Queue)
+	size := len(a.QueueV)
 	if a.Quota >= size {
 		c = size
 	} else {
@@ -177,7 +186,7 @@ func (a Activity) maleCount() int {
 	c := 0
 	total := a.totalCount()
 	for i := 0; i < total; i++ {
-		if len(a.QueueSex) > i && a.QueueSex[i] == define.TypeSexMale {
+		if len(a.QueueSexV) > i && a.QueueSexV[i] == define.TypeSexMale {
 			c += 1
 		}
 	}
@@ -188,7 +197,7 @@ func (a Activity) femaleCount() int {
 	c := 0
 	total := a.totalCount()
 	for i := 0; i < total; i++ {
-		if len(a.QueueSex) > i && a.QueueSex[i] == define.TypeSexFemale {
+		if len(a.QueueSexV) > i && a.QueueSexV[i] == define.TypeSexFemale {
 			c += 1
 		}
 	}

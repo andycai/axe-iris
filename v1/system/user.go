@@ -12,7 +12,7 @@ var User = new(UserSystem)
 func (u UserSystem) GetUser(c iris.Context) {
 	uid, _ := c.Params().GetInt64("uid")
 	user := cache.User.GetUserById(uid)
-	OK(c, user)
+	Ok(c, user)
 }
 
 func (u UserSystem) Login(c iris.Context) {

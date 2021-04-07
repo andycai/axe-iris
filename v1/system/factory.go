@@ -78,7 +78,7 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
-func OK(c iris.Context, data interface{}) {
+func Ok(c iris.Context, data interface{}) {
 	c.JSON(iris.Map{
 		"code": Success,
 		"data": data,
