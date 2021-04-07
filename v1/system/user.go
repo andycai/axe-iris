@@ -16,6 +16,7 @@ func (u UserSystem) GetUser(c iris.Context) {
 }
 
 func (u UserSystem) Login(c iris.Context) {
+	//err := ctx.ReadJSON(&b)
 	c.JSON(nil)
 }
 

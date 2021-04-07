@@ -40,6 +40,18 @@ func (u *User) OutDB() {
 	}
 }
 
+// InDB 入库前的数据格式
+func (u User) InDB() {
+	data, err := json.Marshal(u.GroupsV)
+	if err == nil {
+		u.Groups = string(data)
+	}
+	data, err = json.Marshal(u.ActivitiesV)
+	if err == nil {
+		u.Activities = string(data)
+	}
+}
+
 func (u User) HasActivity(aid int64) bool {
 	for _, activity := range u.ActivitiesV {
 		if activity == aid {
