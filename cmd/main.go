@@ -5,6 +5,7 @@ import (
 	"axe/gl"
 	"axe/v1/router"
 	"fmt"
+
 	"github.com/kataras/iris/v12"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -31,4 +32,5 @@ func main() {
 	gl.App = app
 
 	router.InitRouter(app)
+	app.Listen(viper.GetString("httpServer.addr"))
 }
