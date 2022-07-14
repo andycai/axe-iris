@@ -2,6 +2,7 @@ package router
 
 import (
 	"axe/v1/system"
+
 	"github.com/kataras/iris/v12"
 )
 
@@ -18,8 +19,8 @@ func registerGroupRouter(app *iris.Application) {
 		groupsAPI.Get("/{gid:int}/activities", system.Group.GetActivitiesByGroupId)
 
 		groupsAPI.Post("/", system.Group.Create)
-		groupsAPI.Post("/{gid:int}/gl.Apply", system.Group.Apply)
-		groupsAPI.Post("/{gid:int}/gl.Approve", system.Group.Approve)
+		groupsAPI.Post("/{gid:int}/apply", system.Group.Apply)
+		groupsAPI.Post("/{gid:int}/approve", system.Group.Approve)
 		groupsAPI.Post("/{gid:int}/promote/:mid", system.Group.Promote)
 		groupsAPI.Post("/{gid:int}/transfer/:mid", system.Group.Transfer)
 		groupsAPI.Post("/{gid:int}/remove/:mid", system.Group.Remove)

@@ -2,6 +2,7 @@ package router
 
 import (
 	"axe/v1/system"
+
 	"github.com/kataras/iris/v12"
 )
 
@@ -17,7 +18,7 @@ func registerActivityRouter(app *iris.Application) {
 
 		actsAPI.Post("/", system.Activity.Create)
 		actsAPI.Post("/{aid:int64}/end", system.Activity.End)
-		actsAPI.Post("/{aid:int64}/gl.Apply", system.Activity.Apply)
+		actsAPI.Post("/{aid:int64}/apply", system.Activity.Apply)
 		actsAPI.Post("/{aid:int64}/cancel", system.Activity.Cancel)
 		actsAPI.Post("/{aid:int64}/remove/:index", system.Activity.Remove)
 
